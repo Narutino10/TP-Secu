@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - Projet Sécurité Web</title>
+</head>
+<body>
+  <h2>Dashboard Admin</h2>
+  <button id="access-btn">Accéder aux données sensibles</button>
+  <p id="result"></p>
+
+  <script>
+    const btn = document.getElementById('access-btn');
+    const result = document.getElementById('result');
+
+    btn.addEventListener('click', async () => {
+      const token = localStorage.getItem('token');
+
+      const res = await fetch('/api/admin', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        result.innerText = data.message;
+      } else {
+        result.innerText = data.error || 'Erreur d’accès';
+      }
+    });
+  </script>
+</body>
+</html>

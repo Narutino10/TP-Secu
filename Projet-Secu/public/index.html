@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - Projet Sécurité Web</title>
+</head>
+<body>
+  <h2>Connexion (vulnérable)</h2>
+  <form id="login-form">
+    <input type="text" id="username" placeholder="Nom d'utilisateur" required />
+    <button type="submit">Se connecter</button>
+  </form>
+
+  <p id="result"></p>
+
+  <script>
+    const form = document.getElementById('login-form');
+    const result = document.getElementById('result');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username })
+      });
+
+      const data = await res.json();
+
+      if (data.token) {
+        localStorage.setItem('token', data.token);
+        result.innerText = 'Token reçu ! Redirection vers admin...';
+        setTimeout(() => {
+          window.location.href = '/dashboard.html';
+        }, 1000);
+      } else {
+        result.innerText = 'Erreur de connexion.';
+      }
+    });
+  </script>
+</body>
+</html>
